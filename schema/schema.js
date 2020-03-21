@@ -4,12 +4,14 @@ const { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLList } = graphql
 const books = [{
         id: '1',
         name: 'Vampires',
-        genre: 'Fantasy'
+        genre: 'Fantasy',
+        authorId: '1'
     },
     {
         id: '2',
         name: 'Warewolves',
-        genre: 'Fantasy'
+        genre: 'Fantasy',
+        authorId: '1'
     }
 ]
 const authors = [{
@@ -38,6 +40,12 @@ const AuthorType = new GraphQLObjectType({
         id: { type: GraphQLString },
         name: { type: GraphQLString },
         age: { type: GraphQLString },
+        books: {
+            type: new GraphQLList(BookType),
+            resolve(parent, args) {
+                return _.filter(books, { authorId: parent.id })
+            }
+        }
     })
 })
 const RootQuery = new GraphQLObjectType({
@@ -52,7 +60,7 @@ const RootQuery = new GraphQLObjectType({
             }
         },
         books: {
-            type: GraphQLList(BookType),
+            type: new GraphQLList(BookType),
             resolve(parent, args) {
                 return books
             }
