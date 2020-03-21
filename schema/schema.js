@@ -1,25 +1,35 @@
 const graphql = require('graphql');
-
-const {GraphQLObjectType, GraphQLString, GraphQLSchema} = graphql;
-
+const _ = require('lodash')
+const { GraphQLObjectType, GraphQLString, GraphQLSchema } = graphql;
+const books = [{
+        id: '1',
+        name: 'Vampires',
+        genre: 'Fantasy'
+    },
+    {
+        id: '2',
+        name: 'Warewolves',
+        genre: 'Fantasy'
+    }
+]
 const BookType = new GraphQLObjectType({
-name: 'Book',
-fields: ()=>({
-id: {type: GraphQLString},
-name: { type: GraphQLString },
-genre: { type: GraphQLString },
-})
+    name: 'Book',
+    fields: () => ({
+        id: { type: GraphQLString },
+        name: { type: GraphQLString },
+        genre: { type: GraphQLString },
+    })
 })
 
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-        book:{
+        book: {
             type: BookType,
-            args:{
-                id: {type: GraphQLString},
-                resolve(parent, args){
-
+            args: {
+                id: { type: GraphQLString },
+                resolve(parent, args) {
+                    return _.find(books, { id: args.id })
                 }
             }
         }
